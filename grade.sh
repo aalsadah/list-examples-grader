@@ -8,9 +8,24 @@ mkdir grading-area
 git clone $1 student-submission
 echo 'Finished cloning'
 
+if [[ ! -f student-submission/ListExamples.java ]]
+then
+echo "You have not submitted the correct file or it is named wrong"
+fi
 
-# Draw a picture/take notes on the directory structure that's set up after
-# getting to this point
+cp -r student-submission/ListExamples.java grading-area
+cp -r TestListExamples.java grading-area
+cp -r lib grading-area
 
-# Then, add here code to compile and run, and do any post-processing of the
-# tests
+cd grading-area
+
+javac -cp $CPATH *.java
+
+if [[ $? != 0 ]]
+then
+echo "File did not compile correctly"
+fi
+
+java -cp $CPATH org.junit.runner.JUnitCore TestListExamples > results.txt
+
+cat results.txt
